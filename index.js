@@ -94,7 +94,13 @@ const main = async function () {
 		links,
 	}
 
-	graph.timeline.push(commitData);
+	// Ensure timeline is unique commits
+	const timeline = new Map();
+	graph.timeline.forEach((commit) => {
+		timeline.set(commit.commit, commit);
+	})
+	timeline.set(commitData.commit, commitData);
+	graph.timeline = Array.from(timeline.values());
 
 	let graphdata = JSON.stringify(graph);
 	fs.writeFileSync('graph.json', graphdata);
