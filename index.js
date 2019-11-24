@@ -13,6 +13,23 @@ if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
 	process.exit(1);
 }
 
+let graph = {};
+if (fs.existsSync(`graph.json`)) {
+	let rawdata = fs.readFileSync('graph.json');
+	graph = JSON.parse(rawdata);
+	if (graph.path !== process.argv[2]) {
+		graph = {
+			path: process.argv[2],
+			timeline: [],
+		};
+	}
+} else {
+	graph = {
+		path: process.argv[2],
+		timeline: [],
+	};
+}
+
 console.log(`Analyzing ${dir}`)
 
 const getAllFiles = function (directory) {
@@ -70,15 +87,19 @@ const main = async function () {
 		links.concat(parsed.links);
 	});
 
-	const out = {
+	const commitData = {
 		commit,
 		datetime,
 		nodes,
 		links,
 	}
 
-	console.log(out);
-	// TODO output?
+	graph.timeline.push(commitData);
+
+	let graphdata = JSON.stringify(graph);
+	fs.writeFileSync('graph.json', graphdata);
+
+	console.log(graphdata);
 }
 
 main();
