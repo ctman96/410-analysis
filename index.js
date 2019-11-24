@@ -2,6 +2,8 @@
 // TODO require Matteo's parser
 const fs = require('fs');
 
+const ignore = ['node_modules', '.git']
+
 if (process.argv.length != 3) {
 	console.log('Invalid arguments! call with \'node index.js ${absolute path}\'');
 	process.exit(1);
@@ -37,7 +39,9 @@ const getAllFiles = function (directory) {
 	fs.readdirSync(`${directory}/`).forEach((file) => {
 		// If directory, recurse
 		if (fs.lstatSync(`${directory}/${file}`).isDirectory()) {
-			files.concat(getAllFiles(`${directory}/${file}`));
+			if (!ignore.includes(file)) {
+				files.concat(getAllFiles(`${directory}/${file}`));
+			}
 		} else {
 			// Add any ts files
 			if (file.match(/\.ts$/) !== null) {
