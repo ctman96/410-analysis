@@ -105,6 +105,18 @@ const main = async function () {
 	})
 	timeline.set(commitData.commit, commitData);
 	graph.timeline = Array.from(timeline.values());
+	// Sort timeline by datetime
+	graph.timeline.sort( (a, b) => {
+		const adate = Date.parse(a.datetime);
+		const bdate = Date.parse(b.datetime);
+		if (adate < bdate) {
+			return -1;
+		}
+		if (adate > bdate) {
+			return 1;
+		}
+		return 0;
+	});
 
 	let graphdata = JSON.stringify(graph);
 	fs.writeFileSync('graph.json', graphdata);
