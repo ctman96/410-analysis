@@ -2,6 +2,8 @@ const fs = require('fs');
 const parser = require("@typescript-eslint/typescript-estree");
 var walk = require( 'estree-walker' ).walk;
 
+const log = false;
+
 const astNodeTypes = parser.AST_NODE_TYPES;
 
 const options = {
@@ -171,7 +173,7 @@ const parse = (filepath) => {
           if (parsedClass) {
             parsed.push(parsedClass);
           }
-          console.log(parsedClass);
+          if (log) console.log(parsedClass);
           this.skip();
           break;
         default:
@@ -182,5 +184,16 @@ const parse = (filepath) => {
   return parsed;
 }
 
-const testres = JSON.stringify(parse('./test.ts'));
-console.log(testres);
+
+if (require.main === module) {
+  log = true;
+  //called directly
+  const testres = JSON.stringify(parse('./test.ts'));
+  console.log(testres);
+} else {
+  //required as a module
+}
+
+module.exports = {
+  parse,
+}

@@ -1,6 +1,6 @@
 'use strict';
-// TODO require Matteo's parser
 const fs = require('fs');
+const parser = require('./parser');
 
 const ignore = ['node_modules', '.git']
 
@@ -86,7 +86,7 @@ const main = async function () {
 	const links = [];
 	files.forEach((file) => {
 		console.log(`Parsing ${file}`);
-		const parsed = {}// TODO call Matteo's parser
+		const parsed = parser.parse(file);
 		nodes.concat(parsed.node);
 		links.concat(parsed.links);
 	});

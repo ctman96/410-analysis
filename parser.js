@@ -1,19 +1,27 @@
-const Parser = require('typescript-parser');
-var data = require('./testAstData.json');
+const Parser = require('./astParser');
+//var data = require('./testAstData.json');
 
-var res = parse(data);
+if (require.main === module) {
+    //called directly
+    var res = parse('./test.ts');
 
-console.log("END");
-console.log("LINKS");
-console.log(res.links);
-console.log("NODES");
-console.log(res.nodes);
+    console.log("END");
+    console.log("LINKS");
+    console.log(res.links);
+    console.log("NODES");
+    console.log(res.nodes);
+  } else {
+    //required as a module
+  }
 
 
-
-function parse(fileAst) {
+function parse(filepath) {
 
     let res = {nodes: [], links: []};
+
+    const parsedFile = Parser.parse(filepath);
+    console.log(parsedFile);
+    return res; // TODO remove
 
     // add nodes
     fileAst.declarations.forEach(dec => { 
@@ -69,4 +77,9 @@ function parse(fileAst) {
     });
 
     return res;
+}
+
+
+module.exports = {
+    parse,
 }
