@@ -21,7 +21,22 @@ function parse(filepath) {
 
     const parsedFile = Parser.parse(filepath);
     console.log(parsedFile);
-    return res; // TODO remove
+    parsedFile.forEach((parsedClass) => {
+        const node = {
+            id: parsedClass.class.id,
+            cohesion: 0 // TODO
+        }
+        res.nodes.push(node);
+        parsedClass.links.forEach((target) => {
+            const link = {
+                source: node.id,
+                target,
+            }
+            res.links.push(link);
+        })
+    })
+    console.log(res);
+    return res;
 
     // add nodes
     fileAst.declarations.forEach(dec => { 
