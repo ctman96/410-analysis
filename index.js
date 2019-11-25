@@ -1,6 +1,6 @@
 'use strict';
-// TODO require Matteo's parser
 const fs = require('fs');
+const parser = require('./parser');
 
 const ignore = ['node_modules', '.git']
 
@@ -35,12 +35,12 @@ if (fs.existsSync(`graph.json`)) {
 console.log(`Analyzing ${dir}`)
 
 const getAllFiles = function (directory) {
-	const files = [];
+	let files = [];
 	fs.readdirSync(`${directory}/`).forEach((file) => {
 		// If directory, recurse
 		if (fs.lstatSync(`${directory}/${file}`).isDirectory()) {
 			if (!ignore.includes(file)) {
-				files.concat(getAllFiles(`${directory}/${file}`));
+				files = files.concat(getAllFiles(`${directory}/${file}`));
 			}
 		} else {
 			// Add any ts files
@@ -82,15 +82,24 @@ const main = async function () {
 
 	const files = getAllFiles(dir);
 	
-	const nodes = [];
-	const links = [];
+	let nodes = [];
+	let links = [];
 	files.forEach((file) => {
 		console.log(`Parsing ${file}`);
-		const parsed = {}// TODO call Matteo's parser
-		nodes.concat(parsed.node);
-		links.concat(parsed.links);
+		const parsed = parser.parse(file);
+		nodes = nodes.concat(parsed.nodes);
+		links = links.concat(parsed.links);
 	});
 
+	// Clear out any invalid parsed links (referencing classes that weren't parsed, like node_modules)
+	const classIds = [];
+	nodes.forEach((node) => {
+		classIds.push(node.id);
+	});
+	links.filter((link) => {
+		return classIds.includes(link.source) && classIds.includes(link.target)
+	})
+	
 	const commitData = {
 		commit,
 		datetime,

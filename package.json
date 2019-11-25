@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@typescript-eslint/parser": "^2.8.0",
+    "@typescript-eslint/typescript-estree": "^2.8.0",
+    "eslint": "^6.7.1",
+    "estree-walker": "^1.0.0",
     "typescript-parser": "^2.6.1"
   }
 }
