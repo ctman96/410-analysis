@@ -1,10 +1,127 @@
-const Parser = require('typescript-parser');
+'use strict';
+// TODO require Matteo's parser
+const fs = require('fs');
 
-async function test() {
-	const parser = new Parser.TypescriptParser();
-	const test = await parser.parseFile('test.ts', 'workspace root');
-	console.log(test);
-	console.log(test.declarations[0].methods);
+const ignore = ['node_modules', '.git']
+
+if (process.argv.length != 3) {
+	console.log('Invalid arguments! call with \'node index.js ${absolute path}\'');
+	process.exit(1);
+}
+const dir = process.argv[2];
+
+if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
+	console.log(`${dir} is not a valid directory!`);
+	process.exit(1);
 }
 
-test();
+let graph = {};
+if (fs.existsSync(`graph.json`)) {
+	let rawdata = fs.readFileSync('graph.json');
+	graph = JSON.parse(rawdata);
+	if (graph.path !== process.argv[2]) {
+		graph = {
+			path: process.argv[2],
+			timeline: [],
+		};
+	}
+} else {
+	graph = {
+		path: process.argv[2],
+		timeline: [],
+	};
+}
+
+console.log(`Analyzing ${dir}`)
+
+const getAllFiles = function (directory) {
+	const files = [];
+	fs.readdirSync(`${directory}/`).forEach((file) => {
+		// If directory, recurse
+		if (fs.lstatSync(`${directory}/${file}`).isDirectory()) {
+			if (!ignore.includes(file)) {
+				files.concat(getAllFiles(`${directory}/${file}`));
+			}
+		} else {
+			// Add any ts files
+			if (file.match(/\.ts$/) !== null) {
+				files.push(`${directory}/${file}`);
+			}
+		}
+	})
+	return files;
+}
+
+const main = async function () {
+	const commit = await new Promise((resolve, reject) => {
+		require('child_process').exec('git rev-parse --short=7 HEAD', function(err, stdout) {
+			if (err || !stdout) {
+				console.log(err);
+				reject(err);
+			} else {
+				resolve(stdout.replace(/(\r\n|\n|\r)/gm, "")); // Clear line breaks
+			}
+		});
+	});
+	console.log(`Last commit hash on this branch is: ${commit}`);
+
+	const datetimestr = await new Promise((resolve, reject) => {
+		require('child_process').exec(`git show --no-patch --no-notes --pretty=\'%cd\' ${commit}`, function(err, stdout) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			} else {
+				resolve(stdout);
+			}
+		});
+	});
+	console.log(`Commit datetime is: ${datetimestr}`);
+
+	const datetime = new Date(datetimestr).toISOString();
+	console.log(`Commit date is: ${datetime}`);
+
+	const files = getAllFiles(dir);
+	
+	const nodes = [];
+	const links = [];
+	files.forEach((file) => {
+		console.log(`Parsing ${file}`);
+		const parsed = {}// TODO call Matteo's parser
+		nodes.concat(parsed.node);
+		links.concat(parsed.links);
+	});
+
+	const commitData = {
+		commit,
+		datetime,
+		nodes,
+		links,
+	}
+
+	// Ensure timeline is unique commits
+	const timeline = new Map();
+	graph.timeline.forEach((commit) => {
+		timeline.set(commit.commit, commit);
+	})
+	timeline.set(commitData.commit, commitData);
+	graph.timeline = Array.from(timeline.values());
+	// Sort timeline by datetime
+	graph.timeline.sort( (a, b) => {
+		const adate = Date.parse(a.datetime);
+		const bdate = Date.parse(b.datetime);
+		if (adate < bdate) {
+			return -1;
+		}
+		if (adate > bdate) {
+			return 1;
+		}
+		return 0;
+	});
+
+	let graphdata = JSON.stringify(graph);
+	fs.writeFileSync('graph.json', graphdata);
+
+	console.log(graphdata);
+}
+
+main();
