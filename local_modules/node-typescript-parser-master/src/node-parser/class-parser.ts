@@ -118,6 +118,7 @@ export function parseCtorParams(
  * @param {ClassDeclaration} node
  */
 export function parseClass(tsResource: Resource, node: ClassDeclaration): void {
+    console.log('TEST0');
     const name = node.name ? node.name.text : getDefaultResourceIdentifier(tsResource);
     const classDeclaration = new TshClass(name, isNodeExported(node), node.getStart(), node.getEnd());
 
