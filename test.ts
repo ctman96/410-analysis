@@ -2,6 +2,9 @@ import { StringValidator } from "./StringValidator";
 import { ZipCodeValidator } from "./ZipCodeValidator";
 import { OtherClassTest } from "./ZipCodeValidator";
 import { exportedVar } from "./ZipCodeValidator";
+import strv = require("./StringValidator");
+import * as zip from "./ZipCodeValidator";
+import {StringValidator as strvalidatoAlt} from "./StringValidator";
 
 class Greeter {
     greeting: string;
@@ -39,9 +42,9 @@ class Greeter2 {
 }
 
 class Greeter3 {
-    greeting: string;
+    public greeting: string;
 
-    test1: number;
+    private test1: number;
     test2: number;
     test3: number;
     test4: number;
@@ -80,6 +83,10 @@ class Test extends Asdf {
         this.test += message;
         var tst = new Greeter3("test");
     }
+}
+
+class Test2 extends zip.ZipCodeValidator {
+
 }
 
 let greeter = new Greeter("world");

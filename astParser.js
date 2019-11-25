@@ -9,6 +9,36 @@ const options = {
   jsx: false
 }
 
+const parseMethodDefinition = (methodDefinition) => {
+  let name = "DEFAULT";
+  if (methodDefinition.key && methodDefinition.key.type === astNodeTypes.Identifier && methodDefinition.key.name) {
+    name = methodDefinition.key.name;
+  }
+  const parsedMethod = {
+    name,
+    kind: methodDefinition.kind,
+    variables: []
+  }
+
+  // TODO: Should constructors be ignored? Or leave that up to matteo?
+  
+  walk(methodDefinition.value, {
+    enter(node, parent, prop, index) {
+      switch (node.type) {
+        case astNodeTypes.MemberExpression:
+          if (node.object && node.object.type === astNodeTypes.ThisExpression
+            && node.property && node.property.type === astNodeTypes.Identifier) {
+              parsedMethod.variables.push(node.property.name);
+          }
+          this.skip();
+          break;
+        default:
+          // console.log(node.type);
+      }
+    } 
+  })
+  return parsedMethod;
+}
 
 const parseClass = (classDeclaration) => {
   // When a class is declared, store it in a table, along with file?? (TODO how to deal with files that export other files??)
@@ -28,25 +58,34 @@ const parseClass = (classDeclaration) => {
     functions: [],
   }
 
-  // Don't know they're for sure links, in case they're node_module dependencies
-  const possibleLinks = {
-    files: [], // TODO from imports;
-    ids: [],
+  const links = []
+
+  // Superclass dependency
+  if (classDeclaration.superClass && classDeclaration.superClass.type) {
+    switch (classDeclaration.superClass.type) {
+      case astNodeTypes.Identifier:
+          links.push(classDeclaration.superClass.name);
+          break;
+      case astNodeTypes.MemberExpression:
+        links.push(classDeclaration.superClass.property.name);
+        break;
+      default:
+        console.log("Unparsed Superclass: ", classDeclaration.superClass.type)
+        break;
+    }
   }
 
-  // Superclass dependency for sure
-  if (classDeclaration.superClass && classDeclaration.superClass.type === astNodeTypes.Identifier) {
-    possibleLinks.ids.push(classDeclaration.superClass.name);
-  }
+  // Interface implementation
   if (classDeclaration.implements && classDeclaration.implements.length) {
     classDeclaration.implements.forEach((implements) => {
       if (implements.type == astNodeTypes.TSClassImplements 
         && implements.expression && implements.expression.type == astNodeTypes.Identifier) {
-        possibleLinks.ids.push(implements.expression.name);
+        links.push(implements.expression.name);
       }
     })
   }
 
+  // Class body
   if (classDeclaration.body && classDeclaration.body.type == astNodeTypes.ClassBody) {
     walk(classDeclaration.body, {
       enter(node, parent, prop, index) {
@@ -54,17 +93,25 @@ const parseClass = (classDeclaration) => {
           case astNodeTypes.ClassBody:
             break;
           case astNodeTypes.ClassProperty:
-            // TODO: track all member variables, and look for any dependencies with TSTypeAnnotation/TSTypeReference.typeName.name
+            // Add all parsed variables to class variables list
+            if (node.key && node.key.type === astNodeTypes.Identifier && node.key.name) {
+              classobj.variables.push(node.key.name);
+            }
+            // TODO: look for any dependencies with TSTypeAnnotation/TSTypeReference.typeName.name
             // TODO: Do we actually care about those kinds of links, or do we just want inheritance links?
             this.skip();
             break;
           case astNodeTypes.MethodDefinition:
-            // TODO: Find any MemberExpression identifiers and track them for cohesion
+            // Find any MemberExpression identifiers and track them for cohesion
+            const parsedMethod = parseMethodDefinition(node);
+            if (parsedMethod) {
+              classobj.functions.push(parsedMethod);
+            }
             // Possible TODO: Find any class usages for dependencies, but doesn't look simple so maybe leave it.
             this.skip();
             break;
           default:
-            console.log(node.type);
+            console.log("Unparsed ClassBody ", node.type);
         }
       } 
     })
@@ -72,7 +119,7 @@ const parseClass = (classDeclaration) => {
 
   return {
     class: classobj,
-    possibleLinks,
+    links,
   }
 }
 
@@ -80,10 +127,21 @@ const parseClass = (classDeclaration) => {
 const parseImport = (node) => {
   // for actual dependencies, keep track of import files
   // look closer at what specifically is imported from each file?
-  console.log(JSON.stringify(node));
-  console.log();
-  console.log();
-  console.log();
+  // Alternative: Just ignore and add all links, but then remove any links which we're missing classes for?
+  const parsedImport = {};
+  if (node.source && node.source.type === astNodeTypes.Literal && node.source.value) {
+    // TODO: path vs module
+    parsedImport.path = node.source.value;
+  }
+
+  if (node.specifiers && node.specifiers.length) {
+    node.specifiers.forEach((specifier) => {
+      if (specifier.type === astNodeTypes.ImportSpecifier) {
+
+      }
+    });
+  }
+  return parsedImport;
 }
 
 
@@ -91,7 +149,9 @@ const parseImport = (node) => {
 const parse = (filepath) => {
   const source = fs.readFileSync(filepath, 'utf8');
   const program = parser.parse(source, options)
-  console.log(program);
+  // console.log(program);
+
+  const parsed = [];
 
   let first = true;
   walk(program, {
@@ -102,19 +162,25 @@ const parse = (filepath) => {
       }
       switch (node.type) {
         case astNodeTypes.ImportDeclaration:
-          const parsedImport = parseImport(node);
+          //const parsedImport = parseImport(node);
+          //imports.push(parsedImport);
           this.skip();
           break;
         case astNodeTypes.ClassDeclaration:
           const parsedClass = parseClass(node);
+          if (parsedClass) {
+            parsed.push(parsedClass);
+          }
           console.log(parsedClass);
           this.skip();
           break;
         default:
-          console.log(node.type);
+          // console.log(node.type);
       }
     } 
   })
+  return parsed;
 }
 
-parse('./test.ts');
+const testres = JSON.stringify(parse('./test.ts'));
+console.log(testres);
