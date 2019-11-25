@@ -78,6 +78,7 @@ class Test extends Asdf {
     constructor(message: string) {
         super(message);
         this.test += message;
+        var tst = new Greeter3("test");
     }
 }
 
