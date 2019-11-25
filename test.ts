@@ -8,4 +8,13 @@ class Greeter {
     }
 }
 
+class Asdf {
+    msg: string;
+    greeter: Greeter;
+}
+
+class Test extends Asdf {
+    
+}
+
 let greeter = new Greeter("world");
