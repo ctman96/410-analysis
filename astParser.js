@@ -11,7 +11,7 @@ const options = {
   jsx: false
 }
 
-const parseMethodDefinition = (methodDefinition) => {
+const parseMethodDefinition = (className, methodDefinition) => {
   let name = "DEFAULT";
   if (methodDefinition.key && methodDefinition.key.type === astNodeTypes.Identifier && methodDefinition.key.name) {
     name = methodDefinition.key.name;
@@ -28,9 +28,21 @@ const parseMethodDefinition = (methodDefinition) => {
     enter(node, parent, prop, index) {
       switch (node.type) {
         case astNodeTypes.MemberExpression:
-          if (node.object && node.object.type === astNodeTypes.ThisExpression
-            && node.property && node.property.type === astNodeTypes.Identifier) {
-              parsedMethod.variables.push(node.property.name);
+          if (node.object) {
+            switch (node.object.type) {
+              case(astNodeTypes.ThisExpression):
+                if (node.property && node.property.type === astNodeTypes.Identifier) {
+                    parsedMethod.variables.push(node.property.name);
+                }
+                break;
+              case(astNodeTypes.Identifier):
+                if (node.object.name === className) {
+                  parsedMethod.variables.push(node.property.name);
+                }
+                break;
+              default:
+                //console.log("unparsedMemberExpression", node.object.type);
+            }
           }
           this.skip();
           break;
@@ -109,7 +121,7 @@ const parseClass = (classDeclaration) => {
             break;
           case astNodeTypes.MethodDefinition:
             // Find any MemberExpression identifiers and track them for cohesion
-            const parsedMethod = parseMethodDefinition(node);
+            const parsedMethod = parseMethodDefinition(classobj.id, node);
             if (parsedMethod) {
               classobj.functions.push(parsedMethod);
             }
