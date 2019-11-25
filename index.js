@@ -54,7 +54,7 @@ const getAllFiles = function (directory) {
 
 const main = async function () {
 	const commit = await new Promise((resolve, reject) => {
-		require('child_process').exec('git rev-parse --short=7 HEAD', function(err, stdout) {
+		require('child_process').exec(`git -C ${dir} rev-parse --short=7 HEAD`, function(err, stdout) {
 			if (err || !stdout) {
 				console.log(err);
 				reject(err);
@@ -66,7 +66,7 @@ const main = async function () {
 	console.log(`Last commit hash on this branch is: ${commit}`);
 
 	const datetimestr = await new Promise((resolve, reject) => {
-		require('child_process').exec(`git show --no-patch --no-notes --pretty=\'%cd\' ${commit}`, function(err, stdout) {
+		require('child_process').exec(`git -C ${dir} show --no-patch --no-notes --pretty=\'%cd\' ${commit}`, function(err, stdout) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -84,8 +84,9 @@ const main = async function () {
 	
 	let nodes = [];
 	let links = [];
+	console.log("Parsing files ... ")
 	files.forEach((file) => {
-		console.log(`Parsing ${file}`);
+		// console.log(`Parsing ${file}`);
 		const parsed = parser.parse(file);
 		nodes = nodes.concat(parsed.nodes);
 		links = links.concat(parsed.links);
@@ -130,7 +131,7 @@ const main = async function () {
 	let graphdata = JSON.stringify(graph);
 	fs.writeFileSync('graph.json', graphdata);
 
-	console.log(graphdata);
+	// console.log(graphdata);
 }
 
 main();

@@ -72,7 +72,11 @@ const parseClass = (classDeclaration) => {
         links.push(classDeclaration.superClass.property.name);
         break;
       default:
-        console.log("Unparsed Superclass: ", classDeclaration.superClass.type)
+        if (log) {
+          console.log("Unparsed Superclass: ", classDeclaration.superClass.type)
+        console.log(classDeclaration.superClass);
+        }
+        
         break;
     }
   }
@@ -113,7 +117,7 @@ const parseClass = (classDeclaration) => {
             this.skip();
             break;
           default:
-            console.log("Unparsed ClassBody ", node.type);
+              if (log) console.log("Unparsed ClassBody ", node.type);
         }
       } 
     })
@@ -149,6 +153,7 @@ const parseImport = (node) => {
 
 
 const parse = (filepath) => {
+  if (log) console.log(`Parsing ${filepath}`)
   const source = fs.readFileSync(filepath, 'utf8');
   const program = parser.parse(source, options)
   // console.log(program);

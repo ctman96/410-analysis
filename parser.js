@@ -50,7 +50,7 @@ function parse(filepath) {
         node.cohesion = cohesionVal;
         res.nodes.push(node);
 
-        console.log(node)
+        // console.log(node)
 
         parsedClass.links.forEach((target) => {
             const link = {
