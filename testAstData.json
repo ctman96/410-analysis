@@ -1,0 +1,337 @@
+{
+   "filePath": "test.ts",
+   "rootPath": "workspace root",
+   "start": 0,
+   "end": 1207,
+   "imports": [
+     {
+       "libraryName": "./StringValidator",
+       "start": 0,
+       "end": 52,
+       "specifiers": [
+         {
+           "specifier": "StringValidator"
+         }
+       ]
+     },
+     {
+       "libraryName": "./ZipCodeValidator",
+       "start": 54,
+       "end": 108,
+       "specifiers": [
+         {
+           "specifier": "ZipCodeValidator"
+         }
+       ]
+     },
+     {
+       "libraryName": "./ZipCodeValidator",
+       "start": 110,
+       "end": 162,
+       "specifiers": [
+         {
+           "specifier": "OtherClassTest"
+         }
+       ]
+     },
+     {
+       "libraryName": "./ZipCodeValidator",
+       "start": 164,
+       "end": 213,
+       "specifiers": [
+         {
+           "specifier": "exportedVar"
+         }
+       ]
+     }
+   ],
+   "exports": [],
+   "declarations": [
+     {
+       "name": "Greeter",
+       "isExported": false,
+       "start": 217,
+       "end": 577,
+       "accessors": [],
+       "properties": [
+         {
+           "name": "greeting",
+           "type": "string",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 238,
+           "end": 255
+         },
+         {
+           "name": "test1",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 261,
+           "end": 275
+         },
+         {
+           "name": "test2",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 281,
+           "end": 295
+         }
+       ],
+       "methods": [
+         {
+           "name": "greet",
+           "isAbstract": false,
+           "isOptional": false,
+           "isStatic": false,
+           "isAsync": false,
+           "start": 378,
+           "end": 437,
+           "parameters": [],
+           "variables": []
+         },
+         {
+           "name": "greet2",
+           "isAbstract": false,
+           "isOptional": false,
+           "isStatic": false,
+           "isAsync": false,
+           "start": 445,
+           "end": 530,
+           "parameters": [
+             {
+               "name": "exportedVar",
+               "start": 452,
+               "end": 463
+             }
+           ],
+           "variables": []
+         },
+         {
+           "name": "test",
+           "isAbstract": false,
+           "isOptional": false,
+           "isStatic": false,
+           "isAsync": false,
+           "start": 538,
+           "end": 574,
+           "parameters": [],
+           "variables": [
+             {
+               "name": "testVar",
+               "isConst": false,
+               "isExported": false,
+               "start": 555,
+               "end": 567
+             }
+           ]
+         }
+       ],
+       "ctor": {
+         "name": "Greeter",
+         "start": 301,
+         "end": 372,
+         "parameters": [
+           {
+             "name": "message",
+             "type": "string",
+             "start": 313,
+             "end": 328
+           }
+         ],
+         "variables": []
+       }
+     },
+     {
+       "name": "Greeter2",
+       "isExported": false,
+       "start": 581,
+       "end": 805,
+       "accessors": [],
+       "properties": [
+         {
+           "name": "greeting",
+           "type": "string",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 603,
+           "end": 620
+         },
+         {
+           "name": "test1",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 626,
+           "end": 640
+         },
+         {
+           "name": "test2",
+           "type": "string",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 646,
+           "end": 660
+         }
+       ],
+       "methods": [
+         {
+           "name": "greet",
+           "isAbstract": false,
+           "isOptional": false,
+           "isStatic": false,
+           "isAsync": false,
+           "start": 743,
+           "end": 802,
+           "parameters": [],
+           "variables": []
+         }
+       ],
+       "ctor": {
+         "name": "Greeter2",
+         "start": 666,
+         "end": 737,
+         "parameters": [
+           {
+             "name": "message",
+             "type": "string",
+             "start": 678,
+             "end": 693
+           }
+         ],
+         "variables": []
+       }
+     },
+     {
+       "name": "Greeter3",
+       "isExported": false,
+       "start": 809,
+       "end": 1115,
+       "accessors": [],
+       "properties": [
+         {
+           "name": "greeting",
+           "type": "string",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 831,
+           "end": 848
+         },
+         {
+           "name": "test1",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 856,
+           "end": 870
+         },
+         {
+           "name": "test2",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 876,
+           "end": 890
+         },
+         {
+           "name": "test3",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 896,
+           "end": 910
+         },
+         {
+           "name": "test4",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 916,
+           "end": 930
+         },
+         {
+           "name": "test5",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 936,
+           "end": 950
+         },
+         {
+           "name": "test6",
+           "type": "number",
+           "isOptional": false,
+           "isStatic": false,
+           "start": 956,
+           "end": 970
+         }
+       ],
+       "methods": [
+         {
+           "name": "greet",
+           "isAbstract": false,
+           "isOptional": false,
+           "isStatic": false,
+           "isAsync": false,
+           "start": 1053,
+           "end": 1112,
+           "parameters": [],
+           "variables": []
+         }
+       ],
+       "ctor": {
+         "name": "Greeter3",
+         "start": 976,
+         "end": 1047,
+         "parameters": [
+           {
+             "name": "message",
+             "type": "string",
+             "start": 988,
+             "end": 1003
+           }
+         ],
+         "variables": []
+       }
+     },
+     {
+       "name": "greeter",
+       "isConst": false,
+       "isExported": false,
+       "start": 1121,
+       "end": 1156
+     },
+     {
+       "name": "outerTest",
+       "isConst": false,
+       "isExported": false,
+       "start": 1160,
+       "end": 1174
+     },
+     {
+       "name": "outerTest2",
+       "isConst": false,
+       "isExported": false,
+       "start": 1176,
+       "end": 1195
+     }
+   ],
+   "resources": [],
+   "usages": [
+     "message",
+     "exportedVar",
+     "testVar",
+     "greeting",
+     "test1",
+     "test2",
+     "test3",
+     "test4",
+     "test5",
+     "test6",
+     "greeter",
+     "Greeter",
+     "outerTest",
+     "outerTest2"
+   ]
+ }
