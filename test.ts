@@ -7,15 +7,17 @@ class Greeter {
     greeting: string;
     test1: number;
     test2: number;
+    swordfish: string;
     constructor(message: string) {
         this.greeting = message;
+        this.swordfish = "SWORDFISH";
     }
     greet() {
         return "Hello, " + this.greeting;
     }
 
     greet2(exportedVar) {
-        return "Hello, " + this.greeting + exportedVar;
+        return "Hello, " + this.greeting + exportedVar + this.swordfish;
     }
 
     test(){
@@ -23,6 +25,7 @@ class Greeter {
     }
 }
 
+// should have 100% cohesion
 class Greeter2 {
     greeting: string;
     test1: number;
@@ -31,7 +34,7 @@ class Greeter2 {
         this.greeting = message;
     }
     greet() {
-        return "Hello, " + this.greeting;
+        return "Hello, " + this.greeting + this.test2 + this.test1;
     }
 }
 

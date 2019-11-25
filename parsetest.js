@@ -22,6 +22,6 @@ walk(program, {
     //   default:
     //     console.log(node.type);
     // }
-    console.log(node);
+    console.log(JSON.stringify(node));
   } 
 })

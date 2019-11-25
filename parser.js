@@ -15,106 +15,58 @@ function parse(fileAst) {
 
     let res = {nodes: [], links: []};
 
-    // do pre-calc here
-
-
-    var nodesArr = [];
-    
-    fileAst.declarations.forEach(dec => {    
+    // add nodes
+    fileAst.declarations.forEach(dec => { 
+        // Replace this hasOwnProperty with an instanceOf
+        // if (dec instanceof Parser.ClassDeclaration) {
         if (dec.hasOwnProperty('ctor')) {
-        // is class, so calculate cohesion for this. Might require you to do some counting beforehand
-
-        let cVal;
         let nodeObj = {};
         nodeObj.id = dec.name;
 
-        // GET TOTAL FUNCTION VARIABLE COUNT
-        // for each add number of  function vars in class
+        // Get total number of function variable uses
         
-        // let totalClassVarCount;
-        // let totalFuncVarCount;
-
-        // totalClassVarCount = Object.keys(dec.properties).length;
-
-        // dec.methods.forEach(m => {
-        //     m.variables.forEach(v => {
-        //         totalFuncVarCount++;
-        //     });
-        // });
-
-        // totalFuncVarCount = totalFuncVarCount + totalClassVarCount;
-
-        // GET TOTAL CLASS VARIABLE COUNT
-        // for each var in class, count
-
-        let classVars;
-        let methodVars;
-
-        classVars = Object.keys(dec.properties).length;
-
-        dec.methods.forEach(m => {
-            m.variables.forEach(v => {
-                classVars++;
-            });
-        });
-
-        console.log("classVars");
-        console.log(classVars);
-
-        
-        if (Object.keys(dec.methods).length == 0) {
-            methodVars = 0;
-        } else {
-            dec.methods.forEach(m => {
-                methodVars++;
-            });
-        }
-
-        methodVars = 1;
-
-
-        console.log("methodVars");
-        console.log(methodVars);
-
-
-
-        let totalClassVarCount = methodVars * classVars;
-
-        console.log("totalClassVarCount");
-        console.log(totalClassVarCount);
         
 
-        // ROUND TO PERCENTAGE POINT
+
+        // temporary value
+        let functionVarCount = 1;
+
+        // Get total number of class vars
+        let numclassVars = Object.keys(dec.properties).length;
+        let numMethods = Object.keys(dec.methods).length;
+
+        // console.log("NUMBER OF METHODS");
+        // console.log(numMethods);
+        // console.log("NUMBER OF CLASS VARS");
+        // console.log(numclassVars);
+
+        let totalClassVarCount = numMethods * numclassVars;
+        // console.log("totalClassVarCount");
+        // console.log(totalClassVarCount);
 
 
-        
-        // nodeObj.cohesion = cVal;
-        nodeObj.cohesion = totalClassVarCount;
+        let cohesionVal = functionVarCount / totalClassVarCount;
+        cohesionVal = Math.round(cohesionVal * 100) / 100;     
 
-        nodesArr.push(nodeObj);
+        nodeObj.cohesion = cohesionVal;
+
+        res.nodes.push(nodeObj);
 
         }
     });
 
-    res.nodes = nodesArr;
-
-
-    // console.log(fileAst.imports);
-
-    var linksArr = [];
-
+    // add links
     fileAst.imports.forEach(imp => {
         fileAst.declarations.forEach(dec => {    
+            // Replace this hasOwnProperty with an instanceOf
             if (dec.hasOwnProperty('ctor')) {
                 let importObj = {};
                 importObj.source = imp.specifiers[0].specifier;
                 importObj.target = dec.name;
-                linksArr.push(importObj)
+                res.links.push(importObj)
             }
         });
     });
-
-    res.links = linksArr;
 
     return res;
 }
