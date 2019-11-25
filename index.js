@@ -96,7 +96,7 @@ const main = async function () {
 	nodes.forEach((node) => {
 		classIds.push(node.id);
 	});
-	links.filter((link) => {
+	links = links.filter((link) => {
 		return classIds.includes(link.source) && classIds.includes(link.target)
 	})
 	
