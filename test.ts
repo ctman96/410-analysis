@@ -23,8 +23,9 @@ class Greeter {
         return "Hello, " + this.greeting + exportedVar + this.swordfish;
     }
 
-    test(){
+    testToSeeIfCounted(){
         var testVar;
+        this.test1 = 1;
     }
 }
 
