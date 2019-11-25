@@ -91,6 +91,15 @@ const main = async function () {
 		links.concat(parsed.links);
 	});
 
+	// Clear out any invalid parsed links (referencing classes that weren't parsed, like node_modules)
+	const classIds = [];
+	nodes.forEach((node) => {
+		classIds.push(node.id);
+	});
+	links.filter((link) => {
+		return classIds.includes(link.source) && classIds.includes(link.target)
+	})
+	
 	const commitData = {
 		commit,
 		datetime,
