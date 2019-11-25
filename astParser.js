@@ -13,14 +13,29 @@ const source = fs.readFileSync('./test.ts', 'utf8');
 const program = parser.parse(source, options)
 console.log(program);
 
+
 const parseClass = (node) => {
-  console.log(JSON.stringify(node));
-  console.log();
-  console.log();
-  console.log();
+  // When a class is declared, store it in a table, along with file?? (TODO how to deal with files that export other files??)
+// When a "TSTypeAnnotation" is found, add it to a queue of possible links to be checked afterwards against the table?
+
+// "Identifier" for name/id
+// "superClass" identifier for dependency name/id
+// "TSTypeAnnotation" identifier for dependency name/id - Under "ClassProperty", or in "MethodDefinition"/"FunctionExpression"/"BlockStatement"/...
+
+// Track "ClassProperty" names,
+// And track use of "MemberExpression" in "FunctionExpression"/.... for cohesion calculation
+// (Return list of class properties, list of functions, and list of member variables used in each function?)
+// TODO: how should this deal with superclass variables?
+
+console.log(JSON.stringify(node));
+console.log();
+console.log();
+console.log();
 }
 
+
 const parseImport = (node) => {
+  // for actual dependencies, keep track of import files
   console.log(JSON.stringify(node));
   console.log();
   console.log();

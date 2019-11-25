@@ -66,7 +66,15 @@ class Asdf {
     }
 }
 
+// Test implementation / import usage
+class validator implements StringValidator {
+    isAcceptable(s: string) {
+        return false;
+    };
+}
+
 class Test extends Asdf {
+    validator: validator;
     constructor(message: string) {
         super(message);
         this.test += message;
