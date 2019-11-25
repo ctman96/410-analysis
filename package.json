@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typescript-parser": "^2.6.1"
+    "typescript-parser": "file:local_modules/node-typescript-parser-master"
   }
 }
